@@ -12,7 +12,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 // Middleware
 app.use(express.json());
-app.use(cors({ origin: ["http://localhost:5173", "https://chicket.vercel.app/", "https://chicket.onrender.com"], credentials: true }));
+app.use(cors({ origin: ["http://localhost:5173", "https://chicket.vercel.app", "https://chicket.onrender.com"], credentials: true }));
 app.use("/uploads", express.static("uploads"));
 
 // Connect to MongoDB Atlas
