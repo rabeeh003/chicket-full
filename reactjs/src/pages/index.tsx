@@ -19,7 +19,7 @@ export default function FeedbackForm() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/submit", {
+      const response = await fetch("https://chicket.onrender.com/api/submit", {
         method: "POST",
         body: formData,
         headers: {

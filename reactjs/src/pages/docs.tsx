@@ -43,7 +43,7 @@ export default function FeedbackPage() {
       }
 
       try {
-        const response = await fetch("http://localhost:3000/api/submissions", {
+        const response = await fetch("https://chicket.onrender.com/api/submissions", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

@@ -14,7 +14,7 @@ const SECRET_KEY = "65918f9c0a106b82f507ae261729938371c8bd2f65c506d5d4c8ccaa9c7f
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:3000", "http://feedback.chicketarabia.com/", "https://feedback.chicketarabia.com/", "http://posadmin.chicketarabia.com", "https://posadmin.chicketarabia.com"], // Allow only this frontend URL
+    origin: ["http://localhost:5173", "https://chicket.onrender.com", "http://feedback.chicketarabia.com/", "https://feedback.chicketarabia.com/", "http://posadmin.chicketarabia.com", "https://posadmin.chicketarabia.com"], // Allow only this frontend URL
     credentials: true, // If using cookies or authentication
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
   })
