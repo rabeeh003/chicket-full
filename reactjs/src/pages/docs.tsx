@@ -1,10 +1,11 @@
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
 import { useEffect, useState } from "react";
-import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@heroui/table";
-// Updated TypeScript interface to match actual API response
+import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
+import { Image } from "@heroui/image";
+
 interface Feedback {
-  id: number;
+  _id: number;
   date: string;
   time: string;
   name: string;
@@ -28,14 +29,17 @@ interface Feedback {
 
 export default function FeedbackPage() {
   const [feedback, setFeedback] = useState<Feedback[]>([]);
+  const [filteredFeedback, setFilteredFeedback] = useState<Feedback[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
 
   useEffect(() => {
     const fetchFeedback = async () => {
       setLoading(true);
 
-      const token = localStorage.getItem("token"); // Get token from localStorage
+      const token = localStorage.getItem("token");
       if (!token) {
         setError("No authentication token found. Please log in.");
         setLoading(false);
@@ -47,7 +51,7 @@ export default function FeedbackPage() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Send token in headers
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -55,6 +59,7 @@ export default function FeedbackPage() {
 
         const data: Feedback[] = await response.json();
         setFeedback(data);
+        setFilteredFeedback(data); // Initially show all data
       } catch (error) {
         setError(error instanceof Error ? error.message : "Unknown error");
       } finally {
@@ -65,84 +70,121 @@ export default function FeedbackPage() {
     fetchFeedback();
   }, []);
 
-  // Helper function to format rating values
+  useEffect(() => {
+    if (!startDate && !endDate) {
+      setFilteredFeedback(feedback);
+      return;
+    }
+
+    const filteredData = feedback.filter((item) => {
+      const itemDate = new Date(item.date);
+      const from = startDate ? new Date(startDate) : null;
+      const to = endDate ? new Date(endDate) : null;
+
+      return (!from || itemDate >= from) && (!to || itemDate <= to);
+    });
+
+    setFilteredFeedback(filteredData);
+  }, [startDate, endDate, feedback]);
+
   const formatRating = (rating: string) => {
     return rating.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  // Helper function to format yes/no values
   const formatYesNo = (value: string) => {
     return value === "yes" ? "Yes" : "No";
   };
 
   return (
     <DefaultLayout>
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-        <div className="inline-block max-w-5xl text-center justify-center">
-          <h1 className={title()}>Customer Feedback</h1>
+      <section className="flex flex-col md:items-center relative justify-center gap-4">
+        <h1 className={title()}>Customer Feedback</h1>
 
+        {/* Date Filtering Inputs */}
+        <div className="flex flex-wrap gap-4 mb-4">
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="border p-2 rounded-md"
+          />
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="border p-2 rounded-md"
+          />
+        </div>
+
+        <div className="inline-block max-w-[1200px] text-center justify-center">
           {loading ? (
             <p className="mt-4 text-gray-500">Loading feedback...</p>
           ) : error ? (
             <p className="mt-4 text-red-500">Error: {error}</p>
-          ) : feedback.length === 0 ? (
+          ) : filteredFeedback.length === 0 ? (
             <p className="mt-4 text-gray-500">No feedback available.</p>
           ) : (
-            <div className="mt-6 overflow-x-auto">
+            <div className="overflow-x-auto">
               <Table aria-label="Form collection table">
-                <TableHeader className="bg-gray-50">
-                    <TableColumn key={"id"}>ID</TableColumn>
-                    <TableColumn key={"date"}>Date</TableColumn>
-                    <TableColumn key={"time"}>Time</TableColumn>
-                    <TableColumn key={"name"}>Name</TableColumn>
-                    <TableColumn key={"phone"}>Phone</TableColumn>
-                    <TableColumn key={"email"}>Email</TableColumn>
-                    <TableColumn key={"meal"}>Meal</TableColumn>
-                    <TableColumn key={"mealtemp"}>Meal Temp</TableColumn>
-                    <TableColumn key={"cooking"}>Cooking</TableColumn>
-                    <TableColumn key={"speed"}>Speed</TableColumn>
-                    <TableColumn key={"friendliness"}>Friendliness</TableColumn>
-                    <TableColumn key={"dining"}>Dining Room</TableColumn>
-                    <TableColumn key={"outdoor"}>Outdoor</TableColumn>
-                    <TableColumn key={"frequency"}>Frequency</TableColumn>
-                    <TableColumn key={"wait"}>Wait Time</TableColumn>
-                    <TableColumn key={"staff"}>Staff Available</TableColumn>
-                    <TableColumn key={"bathroom"}>Bathroom Clean</TableColumn>
-                    <TableColumn key={"uniform"}>Uniform Clean</TableColumn>
-                    <TableColumn key={"comments"}>Comments</TableColumn>
-                    <TableColumn key={"attachment"}>Attachment</TableColumn>
+                <TableHeader className="bg-gray-50 sticky top-0 z-10">
+                  <TableColumn>ID</TableColumn>
+                  <TableColumn>Date</TableColumn>
+                  <TableColumn>Time</TableColumn>
+                  <TableColumn>Name</TableColumn>
+                  <TableColumn>Phone</TableColumn>
+                  <TableColumn>Email</TableColumn>
+                  <TableColumn>Meal</TableColumn>
+                  <TableColumn>Meal Temp</TableColumn>
+                  <TableColumn>Cooking</TableColumn>
+                  <TableColumn>Speed</TableColumn>
+                  <TableColumn>Friendliness</TableColumn>
+                  <TableColumn>Dining Room</TableColumn>
+                  <TableColumn>Outdoor</TableColumn>
+                  <TableColumn>Frequency</TableColumn>
+                  <TableColumn>Wait Time</TableColumn>
+                  <TableColumn>Staff Available</TableColumn>
+                  <TableColumn>Bathroom Clean</TableColumn>
+                  <TableColumn>Uniform Clean</TableColumn>
+                  <TableColumn>Comments</TableColumn>
+                  <TableColumn>Attachment</TableColumn>
                 </TableHeader>
-                <TableBody >
-                  {feedback.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell >{item.id}</TableCell>
-                      <TableCell >{item.date}</TableCell>
-                      <TableCell >{item.time}</TableCell>
-                      <TableCell >{item.name}</TableCell>
-                      <TableCell >{item.phone}</TableCell>
-                      <TableCell >{item.email}</TableCell>
-                      <TableCell >{item.meal}</TableCell>
-                      <TableCell >{formatRating(item.meal_temperature)}</TableCell>
-                      <TableCell >{formatRating(item.cooking)}</TableCell>
-                      <TableCell >{formatRating(item.speed_of_service)}</TableCell>
-                      <TableCell >{formatRating(item.friendliness)}</TableCell>
-                      <TableCell >{formatRating(item.dining_room)}</TableCell>
-                      <TableCell >{formatRating(item.outdoor_cleanliness)}</TableCell>
-                      <TableCell >{formatRating(item.visit_frequency)}</TableCell>
-                      <TableCell >{item.service_time} min</TableCell>
-                      <TableCell >{formatYesNo(item.staff_available)}</TableCell>
-                      <TableCell >{formatYesNo(item.bathroom_clean)}</TableCell>
-                      <TableCell >{formatYesNo(item.uniform_clean)}</TableCell>
-                      <TableCell >{item.comments}</TableCell>
-                      <TableCell >
+                <TableBody>
+                  {filteredFeedback.map((item) => (
+                    <TableRow key={item._id}>
+                      <TableCell>{item._id}</TableCell>
+                      <TableCell>{item.date}</TableCell>
+                      <TableCell>{item.time}</TableCell>
+                      <TableCell>{item.name}</TableCell>
+                      <TableCell>{item.phone}</TableCell>
+                      <TableCell>{item.email}</TableCell>
+                      <TableCell>{item.meal}</TableCell>
+                      <TableCell>{formatRating(item.meal_temperature)}</TableCell>
+                      <TableCell>{formatRating(item.cooking)}</TableCell>
+                      <TableCell>{formatRating(item.speed_of_service)}</TableCell>
+                      <TableCell>{formatRating(item.friendliness)}</TableCell>
+                      <TableCell>{formatRating(item.dining_room)}</TableCell>
+                      <TableCell>{formatRating(item.outdoor_cleanliness)}</TableCell>
+                      <TableCell>{formatRating(item.visit_frequency)}</TableCell>
+                      <TableCell>{item.service_time} min</TableCell>
+                      <TableCell>{formatYesNo(item.staff_available)}</TableCell>
+                      <TableCell>{formatYesNo(item.bathroom_clean)}</TableCell>
+                      <TableCell>{formatYesNo(item.uniform_clean)}</TableCell>
+                      <TableCell>{item.comments}</TableCell>
+                      <TableCell>
                         {item.attachment ? (
                           <a
-                            href={item.attachment}
+                            href={"https://chicket.onrender.com" + item.attachment}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-500 hover:text-blue-700 underline"
                           >
-                            View
+                            <Image
+                              isBlurred
+                              alt="Attachment"
+                              className="m-1"
+                              src="https://heroui.com/images/album-cover.png"
+                              width={80}
+                            />
                           </a>
                         ) : (
                           "None"
