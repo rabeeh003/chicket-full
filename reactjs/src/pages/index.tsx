@@ -3,6 +3,7 @@ import { Form } from "@heroui/form";
 import { Input, Textarea } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Radio, RadioGroup } from "@heroui/radio";
+import { Image } from "@heroui/image";
 
 import DefaultLayout from "@/layouts/default";
 
@@ -61,21 +62,21 @@ export default function FeedbackForm() {
               "Dining Room",
               "Outdoor Cleanliness",
             ].map((label) => (
-              <RadioGroup isRequired key={label} label={label} name={label.toLowerCase().replace(/ /g, "_")}>
+              <RadioGroup color="danger" isRequired key={label} label={label} name={label.toLowerCase().replace(/ /g, "_")}>
                 <Radio value="poor">Poor</Radio>
                 <Radio value="very_good">Very Good</Radio>
                 <Radio value="excellent">Excellent</Radio>
               </RadioGroup>
             ))}
 
-            <RadioGroup label="How often do you visit our restaurant?" name="visit_frequency" isRequired>
+            <RadioGroup color="danger" label="How often do you visit our restaurant?" name="visit_frequency" isRequired>
               <Radio value="daily">Daily</Radio>
               <Radio value="weekly">Weekly</Radio>
               <Radio value="monthly">Monthly</Radio>
               <Radio value="frequently">Frequently</Radio>
             </RadioGroup>
 
-            <RadioGroup label="The time it took to receive your meal?" name="service_time" isRequired>
+            <RadioGroup color="danger" label="The time it took to receive your meal?" name="service_time" isRequired>
               <Radio value="0-5">0-5 min</Radio>
               <Radio value="10-15">10-15 min</Radio>
               <Radio value="15-20">15-20 min</Radio>
@@ -87,7 +88,7 @@ export default function FeedbackForm() {
               { label: "Is the bathroom always clean?", name: "bathroom_clean" },
               { label: "Was the uniform of staff clean and tidy?", name: "uniform_clean" },
             ].map(({ label, name }) => (
-              <RadioGroup key={name} label={label} name={name} isRequired>
+              <RadioGroup color="danger" key={name} label={label} name={name} isRequired>
                 <Radio value="yes">Yes</Radio>
                 <Radio value="no">No</Radio>
               </RadioGroup>
@@ -96,8 +97,20 @@ export default function FeedbackForm() {
             <Textarea label="Comments & Suggestions" name="comments" placeholder="Write your feedback..." />
 
             {/* Attachment Input */}
-            <Input label="Upload File" type="file" accept="image/*,application/pdf" onChange={(e) => setAttachment(e.target.files?.[0] || null)} />
-
+            {attachment ? (
+              <div className="w-full flex flex-col items-center justify-between">
+                <Image
+                  alt="Attachment"
+                  src={attachment ? URL.createObjectURL(attachment) : "/placeholder.png"}
+                  width={100}
+                />
+                <Button onClick={() => setAttachment(null)} size="sm" className="mt-3 text-red-500" type="button" variant="bordered">
+                  Remove
+                </Button>
+              </div>
+            ) : (
+              <Input label="Upload File" type="file" accept="image/*,application/pdf" onChange={(e) => setAttachment(e.target.files?.[0] || null)} />
+            )}
             <Button className="w-full bg-rose-800" type="submit" variant="bordered">
               Submit
             </Button>

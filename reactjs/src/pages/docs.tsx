@@ -182,7 +182,7 @@ export default function FeedbackPage() {
                               isBlurred
                               alt="Attachment"
                               className="m-1"
-                              src="https://heroui.com/images/album-cover.png"
+                              src={"https://chicket.onrender.com" + item.attachment}
                               width={80}
                             />
                           </a>
