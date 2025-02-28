@@ -1,13 +1,38 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Form } from "@heroui/form";
 import { Input, Textarea } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Image } from "@heroui/image";
+import { Select, SelectItem } from "@heroui/select";
 
 import DefaultLayout from "@/layouts/default";
+import { LanguageContext } from "@/context/LanguageContext";
+// import { tr } from "framer-motion/client";
 
 export default function FeedbackForm() {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error("FeedbackForm must be used within a LanguageProvider");
+  }
+  const { translations, lang } = context;
+
+  const branches = [
+    { key: "JIDHAFS", label: "JIDHAFS" },
+    { key: "MALKIYA", label: "MALKIYA" },
+    { key: "MUHARRAQ", label: "MUHARRAQ" },
+    { key: "QALALI", label: "QALALI" },
+    { key: "SITRA", label: "SITRA" },
+    { key: "TUBLI", label: "TUBLI" },
+    { key: "MANAMA", label: "MANAMA" },
+    { key: "ARAD", label: "ARAD" },
+    { key: "BUDAIYYA", label: "BUDAIYYA" },
+    { key: "BUSAITEEN", label: "BUSAITEEN" },
+    { key: "HAJIYAT", label: "HAJIYAT" },
+    { key: "HAMAD TOWN", label: "HAMAD TOWN" },
+    { key: "AL HIDD", label: "AL HIDD" },
+    { key: 'ISA TOWN', label: "ISA TOWN" },
+  ];
   const [submitted, setSubmitted] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
 
@@ -41,42 +66,52 @@ export default function FeedbackForm() {
 
   return (
     <DefaultLayout>
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      <section className={`flex flex-col items-center justify-center gap-4 py-8 md:py-10 ${lang === "ar" ? "rtl" : "ltr"}`}>
         <img alt="logo" className="max-w-52" src="/fulllogo.png" />
         {submitted ? (
-          <p className="text-green-600">Thank you! Your feedback has been submitted.</p>
+          <p className="text-white text-center">{translations.thanks}</p>
         ) : (
           <Form className="w-full max-w-md space-y-4" onSubmit={onSubmit}>
-            <Input isRequired label="Date" name="date" type="date" />
-            <Input isRequired label="Time" name="time" type="time" />
-            <Input isRequired label="Name" name="name" placeholder="Enter your name" />
-            <Input isRequired label="Phone Number" name="phone" placeholder="Enter your phone number" type="tel" />
-            <Input label="Email" name="email" placeholder="Enter your email" type="email" />
-            <Input isRequired label="Meal" name="meal" placeholder="Enter your meal name" />
+            <h2 className="text-2xl font-bold text-center w-full mb-4">{translations.feedback}</h2>
+            <Input isRequired label={translations.date} name="date" type="date" />
+            <Input isRequired label={translations.time} name="time" type="time" />
+            <Input isRequired label={translations.name} name="name" placeholder={translations.namePlaceholder} />
+            <Input isRequired label={translations.phone} name="phone" placeholder={translations.phonePlaceholder} type="number" />
+            <Input label={translations.email} name="email" placeholder={translations.emailPlaceholder} type="email" />
+            <Select
+              isRequired
+              items={branches}
+              label={translations.branch}
+              name="branch"
+              placeholder={translations.branchPlaceholder}
+            >
+              {(branch) => <SelectItem>{branch.label}</SelectItem>}
+            </Select>
+            <Input isRequired label={translations.meal} name="meal" placeholder={translations.mealPlaceholder} />
 
             {[
-              "Meal Temperature",
-              "Cooking",
-              "Speed of Service",
-              "Friendliness",
-              "Dining Room",
-              "Outdoor Cleanliness",
+              translations.mealTemperature,
+              translations.cooking,
+              translations.speedofService,
+              translations.friendliness,
+              translations.diningRoom,
+              translations.outdoorCleanliness,
             ].map((label) => (
               <RadioGroup color="danger" isRequired key={label} label={label} name={label.toLowerCase().replace(/ /g, "_")}>
-                <Radio value="poor">Poor</Radio>
-                <Radio value="very_good">Very Good</Radio>
-                <Radio value="excellent">Excellent</Radio>
+                <Radio value="excellent">{translations.Excellent}</Radio>
+                <Radio value="very_good">{translations.VeryGood}</Radio>
+                <Radio value="poor">{translations.Poor}</Radio>
               </RadioGroup>
             ))}
 
-            <RadioGroup color="danger" label="How often do you visit our restaurant?" name="visit_frequency" isRequired>
-              <Radio value="daily">Daily</Radio>
-              <Radio value="weekly">Weekly</Radio>
-              <Radio value="monthly">Monthly</Radio>
-              <Radio value="frequently">Frequently</Radio>
+            <RadioGroup color="danger" label={translations.visit} name="visit_frequency" isRequired>
+              <Radio value="daily">{translations.daily}</Radio>
+              <Radio value="weekly">{translations.weekly}</Radio>
+              <Radio value="monthly">{translations.monthly}</Radio>
+              <Radio value="frequently">{translations.frequently}</Radio>
             </RadioGroup>
 
-            <RadioGroup color="danger" label="The time it took to receive your meal?" name="service_time" isRequired>
+            <RadioGroup color="danger" label={translations.delayTime} name="service_time" isRequired>
               <Radio value="0-5">0-5 min</Radio>
               <Radio value="10-15">10-15 min</Radio>
               <Radio value="15-20">15-20 min</Radio>
@@ -84,17 +119,17 @@ export default function FeedbackForm() {
             </RadioGroup>
 
             {[
-              { label: "Was staff available to serve you?", name: "staff_available" },
-              { label: "Is the bathroom always clean?", name: "bathroom_clean" },
-              { label: "Was the uniform of staff clean and tidy?", name: "uniform_clean" },
+              { label: translations.stafAvilable, name: "staff_available" },
+              { label: translations.uniformClean, name: "bathroom_clean" },
+              { label: translations.bathroomClean, name: "uniform_clean" },
             ].map(({ label, name }) => (
               <RadioGroup color="danger" key={name} label={label} name={name} isRequired>
-                <Radio value="yes">Yes</Radio>
-                <Radio value="no">No</Radio>
+                <Radio value="yes">{translations.yes}</Radio>
+                <Radio value="no">{translations.no}</Radio>
               </RadioGroup>
             ))}
 
-            <Textarea label="Comments & Suggestions" name="comments" placeholder="Write your feedback..." />
+            <Textarea label={translations.message} name="comments" placeholder={translations.messagePlaceholder} />
 
             {/* Attachment Input */}
             {attachment ? (
@@ -109,10 +144,10 @@ export default function FeedbackForm() {
                 </Button>
               </div>
             ) : (
-              <Input label="Upload File" type="file" accept="image/*,application/pdf" onChange={(e) => setAttachment(e.target.files?.[0] || null)} />
+              <Input label={translations.uploadFile} type="file" accept="image/*,application/pdf" onChange={(e) => setAttachment(e.target.files?.[0] || null)} />
             )}
             <Button className="w-full bg-danger text-white" type="submit" variant="bordered">
-              Submit
+              {translations.submit}
             </Button>
           </Form>
         )}

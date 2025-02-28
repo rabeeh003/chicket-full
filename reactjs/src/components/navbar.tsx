@@ -17,8 +17,17 @@ import {
   // DiscordIcon,
   SearchIcon,
 } from "@/components/icons";
+import { useContext } from "react";
+import { LanguageContext } from "@/context/LanguageContext";
+import { Button } from "@heroui/button";
 
 export const Navbar = () => {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error("FeedbackForm must be used within a LanguageProvider");
+  }
+  const { lang, switchLanguage } = context;
+
   const searchInput = (
     <Input
       aria-label="Search"
@@ -73,10 +82,10 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
+        className="flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
+        <NavbarItem className="gap-2">
           {/* <Link isExternal href={siteConfig.links.twitter} title="Twitter">
             <TwitterIcon className="text-default-500" />
           </Link>
@@ -86,6 +95,10 @@ export const Navbar = () => {
           <Link isExternal href={siteConfig.links.github} title="GitHub">
             <GithubIcon className="text-default-500" />
           </Link> */}
+          <Button size="sm" className="p-3 text-white relative font-bold text-lg min-w-0  bg-danger m-2 rounded" onPress={switchLanguage}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-languages"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg> 
+          <span className="absolute top-0 right-1 text-xs ">{lang === "en" ? "ع" : "En"}</span>
+          </Button>
           <ThemeSwitch />
         </NavbarItem>
         {/* <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
@@ -103,8 +116,8 @@ export const Navbar = () => {
         </NavbarItem> */}
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        {/* <Link isExternal href={siteConfig.links.twitter} title="Twitter">
+      {/* <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+        <Link isExternal href={siteConfig.links.twitter} title="Twitter">
           <TwitterIcon className="text-default-500" />
         </Link>
         <Link isExternal href={siteConfig.links.discord} title="Discord">
@@ -112,10 +125,10 @@ export const Navbar = () => {
         </Link>
         <Link isExternal href={siteConfig.links.github} title="GitHub">
           <GithubIcon className="text-default-500" />
-        </Link> */}
+        </Link>
         <ThemeSwitch />
-        {/* <NavbarMenuToggle /> */}
-      </NavbarContent>
+        <NavbarMenuToggle />
+      </NavbarContent> */}
 
       <NavbarMenu>
         {searchInput}

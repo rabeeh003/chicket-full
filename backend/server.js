@@ -29,6 +29,7 @@ const feedbackSchema = new mongoose.Schema({
   name: String,
   phone: String,
   email: String,
+  branch: String,
   meal: String,
   meal_temperature: String,
   cooking: String,
