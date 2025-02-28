@@ -69,7 +69,7 @@ export default function FeedbackForm() {
       <section className={`flex flex-col items-center justify-center gap-4 py-8 md:py-10 ${lang === "ar" ? "rtl" : "ltr"}`}>
         <img alt="logo" className="max-w-52" src="/fulllogo.png" />
         {submitted ? (
-          <p className="text-white text-center">{translations.thanks}</p>
+          <p className="text-center">{translations.thanks}</p>
         ) : (
           <Form className="w-full max-w-md space-y-4" onSubmit={onSubmit}>
             <h2 className="text-2xl font-bold text-center w-full mb-4">{translations.feedback}</h2>

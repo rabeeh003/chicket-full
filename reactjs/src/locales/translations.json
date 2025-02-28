@@ -40,7 +40,7 @@
         "yes": "Yes",
         "no": "No",
 
-        "thanks": "Thank you! <br/> Your feedback has been submitted."
+        "thanks": "Thank you! Your feedback has been submitted."
     },
     "ar": {
         "feedback": "نموذج الملاحظات",
@@ -83,6 +83,6 @@
         "yes": "نعم",
         "no": "لا",
 
-        "thanks": "شكرا لك! <br/> تم تقديم تعليقاتك."
+        "thanks": "شكرا لك! تم تقديم تعليقاتك."
     }
 }
