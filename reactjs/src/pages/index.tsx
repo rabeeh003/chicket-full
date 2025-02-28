@@ -111,7 +111,7 @@ export default function FeedbackForm() {
             ) : (
               <Input label="Upload File" type="file" accept="image/*,application/pdf" onChange={(e) => setAttachment(e.target.files?.[0] || null)} />
             )}
-            <Button className="w-full bg-danger" type="submit" variant="bordered">
+            <Button className="w-full bg-danger text-white" type="submit" variant="bordered">
               Submit
             </Button>
           </Form>
