@@ -38,14 +38,14 @@ export default function FeedbackPage() {
   useEffect(() => {
     const fetchFeedback = async () => {
       setLoading(true);
-
+  
       const token = localStorage.getItem("token");
       if (!token) {
         setError("No authentication token found. Please log in.");
         setLoading(false);
         return;
       }
-
+  
       try {
         const response = await fetch("https://chicket.onrender.com/api/submissions", {
           method: "GET",
@@ -54,21 +54,33 @@ export default function FeedbackPage() {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        if (!response.ok) throw new Error("Failed to fetch feedback");
-
-        const data: Feedback[] = await response.json();
+  
+        const responseData = await response.json();
+  
+        if (!response.ok) {
+          if (responseData.error === "Invalid token.") {
+            localStorage.removeItem("token");
+            setError("Invalid token. Please log in.");
+            setLoading(false);
+            window.location.reload();
+            return;
+          }
+          throw new Error(responseData.error || "Failed to fetch feedback");
+        }
+  
+        const data: Feedback[] = responseData;
         setFeedback(data);
-        setFilteredFeedback(data); // Initially show all data
+        setFilteredFeedback(data);
       } catch (error) {
         setError(error instanceof Error ? error.message : "Unknown error");
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchFeedback();
   }, []);
+  
 
   useEffect(() => {
     if (!startDate && !endDate) {

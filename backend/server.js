@@ -100,7 +100,7 @@ app.post("/api/admin/login", async (req, res) => {
 
   if (!admin || admin.password !== password) return res.status(401).json({ error: "Invalid email or password." });
 
-  const token = jwt.sign({ id: admin._id, email: admin.email }, SECRET_KEY, { expiresIn: "2h" });
+  const token = jwt.sign({ id: admin._id, email: admin.email }, SECRET_KEY, { expiresIn: "1m" });
   res.json({ message: "Login successful!", token });
 });
 
