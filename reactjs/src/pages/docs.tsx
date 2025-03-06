@@ -36,23 +36,6 @@ export default function FeedbackPage() {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
-  const branches = [
-    { key: "JIDHAFS", label: "JIDHAFS" },
-    { key: "MALKIYA", label: "MALKIYA" },
-    { key: "MUHARRAQ", label: "MUHARRAQ" },
-    { key: "QALALI", label: "QALALI" },
-    { key: "SITRA", label: "SITRA" },
-    { key: "TUBLI", label: "TUBLI" },
-    { key: "MANAMA", label: "MANAMA" },
-    { key: "ARAD", label: "ARAD" },
-    { key: "BUDAIYYA", label: "BUDAIYYA" },
-    { key: "BUSAITEEN", label: "BUSAITEEN" },
-    { key: "HAJIYAT", label: "HAJIYAT" },
-    { key: "HAMAD TOWN", label: "HAMAD TOWN" },
-    { key: "AL HIDD", label: "AL HIDD" },
-    { key: 'ISA TOWN', label: "ISA TOWN" },
-  ];
-
   useEffect(() => {
     const fetchFeedback = async () => {
       setLoading(true);
