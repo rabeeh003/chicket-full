@@ -10,6 +10,7 @@ interface Feedback {
   time: string;
   name: string;
   phone: string;
+  branch: string;
   email: string;
   meal: string;
   meal_temperature: string;
@@ -35,6 +36,23 @@ export default function FeedbackPage() {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
+  const branches = [
+    { key: "JIDHAFS", label: "JIDHAFS" },
+    { key: "MALKIYA", label: "MALKIYA" },
+    { key: "MUHARRAQ", label: "MUHARRAQ" },
+    { key: "QALALI", label: "QALALI" },
+    { key: "SITRA", label: "SITRA" },
+    { key: "TUBLI", label: "TUBLI" },
+    { key: "MANAMA", label: "MANAMA" },
+    { key: "ARAD", label: "ARAD" },
+    { key: "BUDAIYYA", label: "BUDAIYYA" },
+    { key: "BUSAITEEN", label: "BUSAITEEN" },
+    { key: "HAJIYAT", label: "HAJIYAT" },
+    { key: "HAMAD TOWN", label: "HAMAD TOWN" },
+    { key: "AL HIDD", label: "AL HIDD" },
+    { key: 'ISA TOWN', label: "ISA TOWN" },
+  ];
+
   useEffect(() => {
     const fetchFeedback = async () => {
       setLoading(true);
@@ -47,7 +65,7 @@ export default function FeedbackPage() {
       }
   
       try {
-        const response = await fetch("https://chicket.onrender.com/api/submissions", {
+        const response = await fetch("https://fadmin.chicketarabia.com/api/submissions", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -139,7 +157,7 @@ export default function FeedbackPage() {
             <div className="overflow-x-auto">
               <Table aria-label="Form collection table">
                 <TableHeader className="bg-gray-50 sticky top-0 z-10">
-                  <TableColumn>ID</TableColumn>
+                  <TableColumn>Branch</TableColumn>
                   <TableColumn>Date</TableColumn>
                   <TableColumn>Time</TableColumn>
                   <TableColumn>Name</TableColumn>
@@ -163,7 +181,7 @@ export default function FeedbackPage() {
                 <TableBody>
                   {filteredFeedback.map((item) => (
                     <TableRow key={item._id}>
-                      <TableCell>{item._id}</TableCell>
+                      <TableCell>{item.branch}</TableCell>
                       <TableCell>{item.date}</TableCell>
                       <TableCell>{item.time}</TableCell>
                       <TableCell>{item.name}</TableCell>
