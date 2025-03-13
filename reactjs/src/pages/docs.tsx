@@ -5,27 +5,22 @@ import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from 
 import { Image } from "@heroui/image";
 
 interface Feedback {
-  _id: number;
+  id: number;
   date: string;
   time: string;
   name: string;
-  phone: string;
+  phone: string | null;
   branch: string;
-  email: string;
-  meal: string;
-  meal_temperature: string;
-  cooking: string;
-  speed_of_service: string;
-  friendliness: string;
-  dining_room: string;
-  outdoor_cleanliness: string;
-  visit_frequency: string;
-  service_time: string;
-  staff_available: string;
-  bathroom_clean: string;
-  uniform_clean: string;
-  comments: string;
-  attachment: string | null;
+  email: string | null;
+  cooking: string | null;
+  speed_of_service: string | null;
+  friendliness: string | null;
+  store_cleanliness: string | null;
+  time_to_receive: string | null;
+  commend: string | null;
+  picture: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export default function FeedbackPage() {
@@ -35,29 +30,30 @@ export default function FeedbackPage() {
   const [error, setError] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const [selectedBranch, setSelectedBranch] = useState<string>("");
 
   useEffect(() => {
     const fetchFeedback = async () => {
       setLoading(true);
-  
+
       const token = localStorage.getItem("token");
       if (!token) {
         setError("No authentication token found. Please log in.");
         setLoading(false);
         return;
       }
-  
+
       try {
-        const response = await fetch("https://fadmin.chicketarabia.com/api/submissions", {
+        const response = await fetch("http://chicket-api.test/api/feedback", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
-  
+
         const responseData = await response.json();
-  
+
         if (!response.ok) {
           if (responseData.error === "Invalid token.") {
             localStorage.removeItem("token");
@@ -68,8 +64,8 @@ export default function FeedbackPage() {
           }
           throw new Error(responseData.error || "Failed to fetch feedback");
         }
-  
-        const data: Feedback[] = responseData;
+
+        const data: Feedback[] = responseData.feedback;
         setFeedback(data);
         setFilteredFeedback(data);
       } catch (error) {
@@ -78,55 +74,65 @@ export default function FeedbackPage() {
         setLoading(false);
       }
     };
-  
+
     fetchFeedback();
   }, []);
-  
 
   useEffect(() => {
-    if (!startDate && !endDate) {
-      setFilteredFeedback(feedback);
-      return;
+    let filteredData = feedback;
+
+    if (startDate || endDate) {
+      filteredData = filteredData.filter((item) => {
+        const itemDate = new Date(item.date);
+        const from = startDate ? new Date(startDate) : null;
+        const to = endDate ? new Date(endDate) : null;
+
+        return (!from || itemDate >= from) && (!to || itemDate <= to);
+      });
     }
 
-    const filteredData = feedback.filter((item) => {
-      const itemDate = new Date(item.date);
-      const from = startDate ? new Date(startDate) : null;
-      const to = endDate ? new Date(endDate) : null;
-
-      return (!from || itemDate >= from) && (!to || itemDate <= to);
-    });
+    if (selectedBranch) {
+      filteredData = filteredData.filter((item) => item.branch === selectedBranch);
+    }
 
     setFilteredFeedback(filteredData);
-  }, [startDate, endDate, feedback]);
+  }, [startDate, endDate, selectedBranch, feedback]);
 
-  const formatRating = (rating: string) => {
-    return rating.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  };
-
-  const formatYesNo = (value: string) => {
-    return value === "yes" ? "Yes" : "No";
-  };
+  const uniqueBranches = Array.from(new Set(feedback.map((item) => item.branch)));
 
   return (
     <DefaultLayout>
       <section className="flex flex-col md:items-center relative justify-center gap-4">
         <h1 className={title()}>Customer Feedback</h1>
 
-        {/* Date Filtering Inputs */}
+        {/* Filtering Inputs */}
         <div className="flex flex-wrap gap-4 mb-4">
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="border p-2 rounded-md"
-          />
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="border p-2 rounded-md"
-          />
+          <select
+            value={selectedBranch}
+            onChange={(e) => setSelectedBranch(e.target.value)}
+            className="border w-full sm:w-fit p-2 rounded-md"
+          >
+            <option value="">All Branches</option>
+            {uniqueBranches.map((branch) => (
+              <option key={branch} value={branch}>
+                {branch}
+              </option>
+            ))}
+          </select>
+          <div className="flex w-full sm:w-fit gap-2">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="border p-2 w-full sm:w-fit rounded-md"
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="border p-2 w-full sm:w-fit rounded-md"
+            />
+          </div>
         </div>
 
         <div className="inline-block max-w-[1200px] text-center justify-center">
@@ -146,47 +152,33 @@ export default function FeedbackPage() {
                   <TableColumn>Name</TableColumn>
                   <TableColumn>Phone</TableColumn>
                   <TableColumn>Email</TableColumn>
-                  <TableColumn>Meal</TableColumn>
-                  <TableColumn>Meal Temp</TableColumn>
                   <TableColumn>Cooking</TableColumn>
                   <TableColumn>Speed</TableColumn>
                   <TableColumn>Friendliness</TableColumn>
-                  <TableColumn>Dining Room</TableColumn>
-                  <TableColumn>Outdoor</TableColumn>
-                  <TableColumn>Frequency</TableColumn>
-                  <TableColumn>Wait Time</TableColumn>
-                  <TableColumn>Staff Available</TableColumn>
-                  <TableColumn>Bathroom Clean</TableColumn>
-                  <TableColumn>Uniform Clean</TableColumn>
+                  <TableColumn>Store Cleanliness</TableColumn>
+                  <TableColumn>Time to Receive</TableColumn>
                   <TableColumn>Comments</TableColumn>
                   <TableColumn>Attachment</TableColumn>
                 </TableHeader>
                 <TableBody>
                   {filteredFeedback.map((item) => (
-                    <TableRow key={item._id}>
+                    <TableRow key={item.id}>
                       <TableCell>{item.branch}</TableCell>
                       <TableCell>{item.date}</TableCell>
                       <TableCell>{item.time}</TableCell>
                       <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.phone}</TableCell>
-                      <TableCell>{item.email}</TableCell>
-                      <TableCell>{item.meal}</TableCell>
-                      <TableCell>{formatRating(item.meal_temperature)}</TableCell>
-                      <TableCell>{formatRating(item.cooking)}</TableCell>
-                      <TableCell>{formatRating(item.speed_of_service)}</TableCell>
-                      <TableCell>{formatRating(item.friendliness)}</TableCell>
-                      <TableCell>{formatRating(item.dining_room)}</TableCell>
-                      <TableCell>{formatRating(item.outdoor_cleanliness)}</TableCell>
-                      <TableCell>{formatRating(item.visit_frequency)}</TableCell>
-                      <TableCell>{item.service_time} min</TableCell>
-                      <TableCell>{formatYesNo(item.staff_available)}</TableCell>
-                      <TableCell>{formatYesNo(item.bathroom_clean)}</TableCell>
-                      <TableCell>{formatYesNo(item.uniform_clean)}</TableCell>
-                      <TableCell>{item.comments}</TableCell>
+                      <TableCell>{item.phone || "N/A"}</TableCell>
+                      <TableCell>{item.email || "N/A"}</TableCell>
+                      <TableCell>{item.cooking || "N/A"}</TableCell>
+                      <TableCell>{item.speed_of_service || "N/A"}</TableCell>
+                      <TableCell>{item.friendliness || "N/A"}</TableCell>
+                      <TableCell>{item.store_cleanliness || "N/A"}</TableCell>
+                      <TableCell>{item.time_to_receive || "N/A"}</TableCell>
+                      <TableCell>{item.commend || "N/A"}</TableCell>
                       <TableCell>
-                        {item.attachment ? (
+                        {item.picture ? (
                           <a
-                            href={"https://chicket.onrender.com" + item.attachment}
+                            href={"https://chicket.onrender.com/" + item.picture}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-500 hover:text-blue-700 underline"
@@ -195,7 +187,7 @@ export default function FeedbackPage() {
                               isBlurred
                               alt="Attachment"
                               className="m-1"
-                              src={"https://chicket.onrender.com" + item.attachment}
+                              src={"https://chicket.onrender.com/" + item.picture}
                               width={80}
                             />
                           </a>

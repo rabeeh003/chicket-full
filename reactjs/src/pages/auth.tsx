@@ -7,8 +7,10 @@ import { useState } from "react";
 
 export default function Login() {
   const [data, setData] = useState({
+    name: "",
     email: "",
     password: "",
+    confirm_password: "",
   });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -17,16 +19,18 @@ export default function Login() {
     console.log("Form Data:", formData, data);
 
     try {
-      // const response = await fetch("https://chicket.onrender.com/api/admin/register", {
-      const response = await fetch("https://chicket.onrender.com/api/admin/login", {
+      const response = await fetch("http://chicket-api.test/api/login", {
+      // const response = await fetch("http://chicket-api.test/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Ensure JSON is sent
           "Accept": "application/json",
         },
         body: JSON.stringify({
+          // name: data.name,
           email: data.email,
           password: data.password,
+          // confirm_password: data.password
         }),
       });
 

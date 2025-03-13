@@ -63,7 +63,7 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  const defaultLang: "en" | "ar" = (localStorage.getItem("lang") as "en" | "ar") || "en";
+  const defaultLang: "en" | "ar" = (localStorage.getItem("lang") as "en" | "ar") || "ar";
   const [lang, setLang] = useState<"en" | "ar">(defaultLang);
 
   useEffect(() => {

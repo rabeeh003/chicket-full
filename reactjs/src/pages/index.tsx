@@ -33,6 +33,14 @@ export default function FeedbackForm() {
     { key: "AL HIDD", label: "AL HIDD" },
     { key: 'ISA TOWN', label: "ISA TOWN" },
   ];
+
+  const radioOptions = [
+    {label: translations.cooking, name: "cooking" },
+    {label: translations.speedofService, name: "speed_of_service" },
+    {label: translations.friendliness, name: "friendliness" },
+    {label: translations.outdoorCleanliness, name: "store_cleanliness" },
+    ];
+
   const [submitted, setSubmitted] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
 
@@ -41,17 +49,19 @@ export default function FeedbackForm() {
     const formData = new FormData(e.currentTarget);
 
     if (attachment) {
-      formData.append("attachment", attachment);
+      formData.append("picture", attachment);
     }
 
+
     try {
-      const response = await fetch("https://chicket.onrender.com/api/submit", {
+      const response = await fetch("http://chicket-api.test/api/feedback", {
         method: "POST",
         body: formData,
         headers: {
           "Accept": "application/json",
         },
       });
+      console.log("Res : ", response)
 
       const result = await response.json();
       if (response.ok) {
@@ -87,38 +97,32 @@ export default function FeedbackForm() {
             >
               {(branch) => <SelectItem>{branch.label}</SelectItem>}
             </Select>
-            <Input isRequired label={translations.meal} name="meal" placeholder={translations.mealPlaceholder} />
+            {/* <Input isRequired label={translations.meal} name="meal" placeholder={translations.mealPlaceholder} /> */}
 
-            {[
-              translations.mealTemperature,
-              translations.cooking,
-              translations.speedofService,
-              translations.friendliness,
-              translations.diningRoom,
-              translations.outdoorCleanliness,
-            ].map((label) => (
-              <RadioGroup color="danger" isRequired key={label} label={label} name={label.toLowerCase().replace(/ /g, "_")}>
-                <Radio value="excellent">{translations.Excellent}</Radio>
-                <Radio value="very_good">{translations.VeryGood}</Radio>
-                <Radio value="poor">{translations.Poor}</Radio>
-              </RadioGroup>
+
+            {radioOptions.map(({label, name}) => (
+            <RadioGroup color="danger" key={name} label={name} name={label}>
+              <Radio value="excellent">{translations.Excellent}</Radio>
+              <Radio value="very_good">{translations.VeryGood}</Radio>
+              <Radio value="poor">{translations.Poor}</Radio>
+            </RadioGroup>
             ))}
 
-            <RadioGroup color="danger" label={translations.visit} name="visit_frequency" isRequired>
+
+            {/* <RadioGroup color="danger" label={translations.visit} name="visit_frequency" isRequired>
               <Radio value="daily">{translations.daily}</Radio>
               <Radio value="weekly">{translations.weekly}</Radio>
               <Radio value="monthly">{translations.monthly}</Radio>
               <Radio value="frequently">{translations.frequently}</Radio>
-            </RadioGroup>
+            </RadioGroup> */}
 
-            <RadioGroup color="danger" label={translations.delayTime} name="service_time" isRequired>
-              <Radio value="0-5">0-5 min</Radio>
+            <RadioGroup color="danger" label={translations.delayTime} name="time_to_receive">
               <Radio value="10-15">10-15 min</Radio>
               <Radio value="15-20">15-20 min</Radio>
               <Radio value="20+">More than 20 min</Radio>
             </RadioGroup>
 
-            {[
+            {/* {[
               { label: translations.stafAvilable, name: "staff_available" },
               { label: translations.uniformClean, name: "bathroom_clean" },
               { label: translations.bathroomClean, name: "uniform_clean" },
@@ -127,9 +131,9 @@ export default function FeedbackForm() {
                 <Radio value="yes">{translations.yes}</Radio>
                 <Radio value="no">{translations.no}</Radio>
               </RadioGroup>
-            ))}
+            ))} */}
 
-            <Textarea label={translations.message} name="comments" placeholder={translations.messagePlaceholder} />
+            <Textarea label={translations.message} name="commend" placeholder={translations.messagePlaceholder} />
 
             {/* Attachment Input */}
             {attachment ? (
