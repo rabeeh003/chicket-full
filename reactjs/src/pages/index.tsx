@@ -54,7 +54,7 @@ export default function FeedbackForm() {
 
 
     try {
-      const response = await fetch("http://chicket-api.test/api/feedback", {
+      const response = await fetch("https://chicketarabia.com/api/feedback", {
         method: "POST",
         body: formData,
         headers: {
