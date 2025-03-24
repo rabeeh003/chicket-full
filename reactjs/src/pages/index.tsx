@@ -101,7 +101,7 @@ export default function FeedbackForm() {
 
 
             {radioOptions.map(({label, name}) => (
-            <RadioGroup color="danger" key={name} label={name} name={label}>
+            <RadioGroup color="danger" key={name} label={label} name={label}>
               <Radio value="excellent">{translations.Excellent}</Radio>
               <Radio value="very_good">{translations.VeryGood}</Radio>
               <Radio value="poor">{translations.Poor}</Radio>
@@ -117,9 +117,9 @@ export default function FeedbackForm() {
             </RadioGroup> */}
 
             <RadioGroup color="danger" label={translations.delayTime} name="time_to_receive">
-              <Radio value="10-15">10-15 min</Radio>
-              <Radio value="15-20">15-20 min</Radio>
-              <Radio value="20+">More than 20 min</Radio>
+              <Radio value="10-15">{translations.op1}</Radio>
+              <Radio value="15-20">{translations.op2}</Radio>
+              <Radio value="20+">{translations.op3}</Radio>
             </RadioGroup>
 
             {/* {[

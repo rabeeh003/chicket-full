@@ -37,6 +37,9 @@ type Translations = {
   frequently: string;
 
   delayTime: string;
+  op1: string;
+  op2: string;
+  op3: string;
   stafAvilable: string; // Check the spelling mistake
   uniformClean: string;
   bathroomClean: string;
