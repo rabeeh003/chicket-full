@@ -18,20 +18,33 @@ export default function FeedbackForm() {
   const { translations, lang } = context;
 
   const branches = [
-    { key: "JIDHAFS", label: "JIDHAFS" },
-    { key: "MALKIYA", label: "MALKIYA" },
-    { key: "MUHARRAQ", label: "MUHARRAQ" },
-    { key: "QALALI", label: "QALALI" },
-    { key: "SITRA", label: "SITRA" },
-    { key: "TUBLI", label: "TUBLI" },
-    { key: "MANAMA", label: "MANAMA" },
-    { key: "ARAD", label: "ARAD" },
-    { key: "BUDAIYYA", label: "BUDAIYYA" },
-    { key: "BUSAITEEN", label: "BUSAITEEN" },
-    { key: "HAJIYAT", label: "HAJIYAT" },
-    { key: "HAMAD TOWN", label: "HAMAD TOWN" },
-    { key: "AL HIDD", label: "AL HIDD" },
-    { key: 'ISA TOWN', label: "ISA TOWN" },
+    { key: "DAMMAM", label: "DAMMAM" },
+    { key: "ABQAIQ", label: "ABQAIQ" },
+    { key: "Azizia", label: "Azizia" },
+    { key: "NASEEM", label: "NASEEM" },
+    { key: "NAJAH", label: "NAJAH" },
+    { key: "SALAHIYA", label: "SALAHIYA" },
+    { key: "OMRAN", label: "OMRAN" },
+    { key: "AOMRAN", label: "ARADOMRAN" },
+    { key: "NUZHA", label: "NUZHA" },
+    { key: "MOHAMMEDIYA", label: "MOHAMMEDIYA" },
+    { key: "TARAF", label: "TARAF" },
+    { key: "GARA", label: "GARA" },
+    { key: "SHIHABIYA", label: "SHIHABIYA" },
+    { key: 'RUQAIQA', label: "RUQAIQA" },
+    { key: 'KHALDIYA', label: "KHALDIYA" },
+    { key: 'OYUN', label: "OYUN" },
+    { key: 'MUNAIZILA', label: "MUNAIZILA" },
+    { key: 'MUHASIN', label: "MUHASIN" },
+    { key: 'MUBARAZ', label: "MUBARAZ" },
+    { key: 'NAIFIYAH', label: "NAIFIYAH" },
+    { key: 'KILABIYYA', label: "KILABIYYA" },
+    { key: 'YANBU-01', label: "YANBU-01" },
+    { key: 'BADR', label: "BADR" },
+    { key: 'YANBU-02', label: "YANBU-02" },
+    { key: 'YANBU-03', label: "YANBU-03" },
+    { key: 'YANBU-04', label: "YANBU-04" },
+    { key: 'BADR-02', label: "BADR-02" },
   ];
 
   const radioOptions = [
@@ -39,7 +52,7 @@ export default function FeedbackForm() {
     {label: translations.speedofService, name: "speed_of_service" },
     {label: translations.friendliness, name: "friendliness" },
     {label: translations.outdoorCleanliness, name: "store_cleanliness" },
-    ];
+  ];
 
   const [submitted, setSubmitted] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
@@ -52,9 +65,15 @@ export default function FeedbackForm() {
       formData.append("picture", attachment);
     }
 
-
     try {
-      const response = await fetch("https://chicketarabia.com/api/feedback", {
+
+      // set dummy :
+      // setSubmitted(true);
+      // if (true) {
+      //   return;
+      // }
+
+      const response = await fetch("https://fadmin.mazaarabia.com/api/feedback", {
         method: "POST",
         body: formData,
         headers: {
@@ -76,15 +95,15 @@ export default function FeedbackForm() {
 
   return (
     <DefaultLayout>
-      <section className={`flex flex-col items-center justify-center gap-4 py-8 md:py-10 ${lang === "ar" ? "rtl" : "ltr"}`}>
+      <section className={`flex flex-col items-center justify-center gap-4 py-8 pb-10 md:py-10 ${lang === "ar" ? "rtl" : "ltr"}`}>
         <img alt="logo" className="max-w-52" src="/fulllogo.png" />
         {submitted ? (
           <p className="text-center">{translations.thanks}</p>
         ) : (
           <Form className="w-full max-w-md space-y-4" onSubmit={onSubmit}>
             <h2 className="text-2xl font-bold text-center w-full mb-4">{translations.feedback}</h2>
-            <Input isRequired label={translations.date} name="date" type="date" />
-            <Input isRequired label={translations.time} name="time" type="time" />
+            {/* `<Input isRequired label={translations.date} name="date" type="date" />
+            `<Input isRequired label={translations.time} name="time" type="time" /> */}
             <Input isRequired label={translations.name} name="name" placeholder={translations.namePlaceholder} />
             <Input isRequired label={translations.phone} name="phone" placeholder={translations.phonePlaceholder} type="number" />
             <Input label={translations.email} name="email" placeholder={translations.emailPlaceholder} type="email" />
@@ -117,9 +136,9 @@ export default function FeedbackForm() {
             </RadioGroup> */}
 
             <RadioGroup color="danger" label={translations.delayTime} name="time_to_receive">
-              <Radio value="10-15">{translations.op1}</Radio>
-              <Radio value="15-20">{translations.op2}</Radio>
-              <Radio value="20+">{translations.op3}</Radio>
+              <Radio value="20-25">{translations.op1}</Radio>
+              <Radio value="25-30">{translations.op2}</Radio>
+              <Radio value="30+">{translations.op3}</Radio>
             </RadioGroup>
 
             {/* {[
@@ -150,7 +169,7 @@ export default function FeedbackForm() {
             ) : (
               <Input label={translations.uploadFile} type="file" accept="image/*,application/pdf" onChange={(e) => setAttachment(e.target.files?.[0] || null)} />
             )}
-            <Button className="w-full bg-danger text-white" type="submit" variant="bordered">
+            <Button className="w-full bg-danger text-white mb-20" type="submit" variant="bordered">
               {translations.submit}
             </Button>
           </Form>

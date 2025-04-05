@@ -50,7 +50,7 @@ export const Navbar = () => {
   );
 
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky" className="bg-danger">
+    <HeroUINavbar maxWidth="xl" position="sticky" className="">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <Link
@@ -59,7 +59,7 @@ export const Navbar = () => {
             href="/"
           >
             {/* <Logo /> */}
-            <img alt="logo" className="w-12 bg-white rounded-lg" src="/logo.png" />
+            <img alt="logo" className="w-12 bg-white rounded-full" src="/logo.png" />
             {/* <p className="font-bold text-inherit">ACME</p> */}
           </Link>
         </NavbarBrand>

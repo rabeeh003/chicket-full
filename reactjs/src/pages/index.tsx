@@ -37,7 +37,7 @@ export default function FeedbackForm() {
   const radioOptions = [
     {label: translations.cooking, name: "cooking" },
     {label: translations.speedofService, name: "speed_of_service" },
-    {label: translations.friendliness, name: "friendliness" },
+    {label: translations.friendliness, name: "firendliness" },
     {label: translations.outdoorCleanliness, name: "store_cleanliness" },
     ];
 
@@ -101,7 +101,7 @@ export default function FeedbackForm() {
 
 
             {radioOptions.map(({label, name}) => (
-            <RadioGroup color="danger" key={name} label={label} name={label}>
+            <RadioGroup color="danger" key={name} label={label} name={name}>
               <Radio value="excellent">{translations.Excellent}</Radio>
               <Radio value="very_good">{translations.VeryGood}</Radio>
               <Radio value="poor">{translations.Poor}</Radio>
