@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Form } from "@heroui/form";
 import { Input, Textarea } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Image } from "@heroui/image";
 import { Select, SelectItem } from "@heroui/select";
+import { SocialIcon } from 'react-social-icons'
 
 import DefaultLayout from "@/layouts/default";
 import { LanguageContext } from "@/context/LanguageContext";
@@ -48,14 +49,27 @@ export default function FeedbackForm() {
   ];
 
   const radioOptions = [
-    {label: translations.cooking, name: "cooking" },
-    {label: translations.speedofService, name: "speed_of_service" },
-    {label: translations.friendliness, name: "friendliness" },
-    {label: translations.outdoorCleanliness, name: "store_cleanliness" },
+    { label: translations.cooking, name: "cooking" },
+    { label: translations.speedofService, name: "speed_of_service" },
+    { label: translations.friendliness, name: "friendliness" },
+    { label: translations.outdoorCleanliness, name: "store_cleanliness" },
   ];
 
   const [submitted, setSubmitted] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
+  const [deviceType, setDeviceType] = useState(""); // State to store device type
+
+  // Detect device type on component mount
+  useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      setDeviceType("iphone");
+    } else if (/android/.test(userAgent)) {
+      setDeviceType("android");
+    } else {
+      setDeviceType("other"); // PC or other devices
+    }
+  }, []);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -95,8 +109,15 @@ export default function FeedbackForm() {
 
   return (
     <DefaultLayout>
-      <section className={`flex flex-col items-center justify-center gap-4 py-8 pb-10 md:py-10 ${lang === "ar" ? "rtl" : "ltr"}`}>
-        <img alt="logo" className="max-w-52" src="/fulllogo.png" />
+      <section className={`flex flex-col items-center justify-center gap-4 md:py-10 ${lang === "ar" ? "rtl" : "ltr"}`}>
+        <img alt="logo" className="max-w-52 dark:hidden" src="/fulllogo.png" />
+        <img alt="logo" className="max-w-52 hidden dark:flex" src="/fulllogo-white.png" />
+        <div className="flex justify-between items-center gap-2">
+          <SocialIcon network="instagram" url="https://www.instagram.com/mazaarabia/?utm_source=qr" style={{ height: 25, width: 25 }} />
+          <SocialIcon network="snapchat" url="https://snapchat.com/t/sZJuNSvp" style={{ height: 25, width: 25 }} />
+          <SocialIcon network="tiktok" url="https://www.tiktok.com/@maza_arabia?_t=ZS-8vH127FtZo7&_r=1" style={{ height: 25, width: 25 }} />
+          <SocialIcon network="facebook" url="https://www.facebook.com/share/1BB77ViZf3/?mibextid=wwXIfr" style={{ height: 25, width: 25 }} />
+        </div>
         {submitted ? (
           <p className="text-center">{translations.thanks}</p>
         ) : (
@@ -119,12 +140,12 @@ export default function FeedbackForm() {
             {/* <Input isRequired label={translations.meal} name="meal" placeholder={translations.mealPlaceholder} /> */}
 
 
-            {radioOptions.map(({label, name}) => (
-            <RadioGroup color="danger" key={name} label={label} name={label}>
-              <Radio value="excellent">{translations.Excellent}</Radio>
-              <Radio value="very_good">{translations.VeryGood}</Radio>
-              <Radio value="poor">{translations.Poor}</Radio>
-            </RadioGroup>
+            {radioOptions.map(({ label, name }) => (
+              <RadioGroup color="danger" key={name} label={label} name={name}>
+                <Radio value="very_good">{translations.VeryGood}</Radio>
+                <Radio value="poor">{translations.Poor}</Radio>
+                <Radio value="excellent">{translations.Excellent}</Radio>
+              </RadioGroup>
             ))}
 
 
@@ -169,12 +190,96 @@ export default function FeedbackForm() {
             ) : (
               <Input label={translations.uploadFile} type="file" accept="image/*,application/pdf" onChange={(e) => setAttachment(e.target.files?.[0] || null)} />
             )}
-            <Button className="w-full bg-danger text-white mb-20" type="submit" variant="bordered">
+            <Button className="w-full bg-danger text-white" type="submit" variant="bordered">
               {translations.submit}
             </Button>
           </Form>
         )}
+        <div className="w-full max-w-md mt-16">
+          {deviceType === "iphone" && (
+            <a href="https://apps.apple.com/sa/app/maza-%D9%85%D8%A7%D8%B2%D8%A9/id1530221224">
+              <div className="flex justify-between shadow-md items-center gap-2 bg-white dark:bg-black rounded-2xl w-full p-2 mb-8">
+                <div className="flex justify-start items-center gap-2">
+                  <img
+                    alt="logo"
+                    className="w-20 bg-white dark:bg-black border border-gray-100 dark:border-gray-900 shadow-sm p-2 rounded-xl"
+                    src="/logo.png"
+                  />
+                  <div className="text-black dark:text-white items-start">
+                    <h2 className="text-xl font-bold text-center w-full">Maza - مازة</h2>
+                    <p>Maza</p>
+                  </div>
+                </div>
+                <img
+                  className="w-10 me-3"
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/App_Store_%28iOS%29.svg/512px-App_Store_%28iOS%29.svg.png"
+                  alt="app store"
+                />
+              </div>
+            </a>
+          )}
+
+          {deviceType === "android" && (
+            <a href="https://play.google.com/store/apps/details?id=com.emcan.maza&pcampaignid=web_share">
+              <div className="flex justify-between shadow-md items-center gap-2 bg-white dark:bg-black rounded-2xl w-full p-2 mb-8">
+                <div className="flex justify-start items-center gap-2">
+                  <img
+                    alt="logo"
+                    className="w-20 bg-white dark:bg-black border border-gray-100 dark:border-gray-900 shadow-sm p-2 rounded-xl"
+                    src="/logo.png"
+                  />
+                  <div className="text-black dark:text-white items-start">
+                    <h2 className="text-xl font-bold text-center w-full">Maza - مازة</h2>
+                    <p>Maza</p>
+                  </div>
+                </div>
+                <img
+                  className="w-10 me-3 rounded-lg shadow-sm"
+                  src="https://static.vecteezy.com/system/resources/previews/022/484/501/non_2x/google-play-store-icon-logo-symbol-free-png.png"
+                  alt="play store"
+                />
+              </div>
+            </a>
+          )}
+
+          {deviceType === "other" && (
+            <>
+              <div className="flex justify-between shadow-md items-center gap-2 bg-white dark:bg-black rounded-2xl w-full p-2 mb-4">
+                <div className="flex justify-start items-center gap-2">
+                  <img
+                    alt="logo"
+                    className="w-20 bg-white dark:bg-black border border-gray-100 dark:border-gray-900 shadow-sm p-2 rounded-xl"
+                    src="/logo.png"
+                  />
+                  <div className="text-gray-600 dark:text-white items-start">
+                    <h2 className="text-xl font-bold text-center w-full">Maza - مازة</h2>
+                    <p>Maza</p>
+                  </div>
+                </div>
+                <div className="flex">
+                  <a href="https://apps.apple.com/sa/app/maza-%D9%85%D8%A7%D8%B2%D8%A9/id1530221224">
+                    <img
+                      className="w-10 me-3 shadow-sm"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/App_Store_%28iOS%29.svg/512px-App_Store_%28iOS%29.svg.png"
+                      alt="app store"
+                    />
+                  </a>
+                  <a href="https://play.google.com/store/apps/details?id=com.emcan.maza&pcampaignid=web_share">
+                    <img
+                      className="w-10 me-3 border rounded-lg shadow-sm"
+                      src="https://static.vecteezy.com/system/resources/previews/022/484/501/non_2x/google-play-store-icon-logo-symbol-free-png.png"
+                      alt="play store"
+                    />
+                  </a>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+        <p className="text-center text-sm text-gray-700 dark:text-gray-100">
+          © 2023 Maza Arabia. All rights reserved.
+        </p>
       </section>
-    </DefaultLayout>
+    </DefaultLayout >
   );
 }
