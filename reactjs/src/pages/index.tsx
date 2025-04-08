@@ -32,6 +32,7 @@ export default function FeedbackForm() {
     { key: "HAMAD TOWN", label: "HAMAD TOWN" },
     { key: "AL HIDD", label: "AL HIDD" },
     { key: 'ISA TOWN', label: "ISA TOWN" },
+    { key: 'JUFFAIR', label: "JUFFAIR" },
   ];
 
   const radioOptions = [
