@@ -122,7 +122,7 @@ export default function FeedbackForm() {
           <p className="text-center">{translations.thanks}</p>
         ) : (
           <Form className="w-full max-w-md space-y-4" onSubmit={onSubmit}>
-            <h2 className="text-2xl font-bold text-center w-full mb-4">{translations.feedback}</h2>
+            <h2 className="text-2xl font-bold text-black dark:text-white text-center w-full mb-4">{translations.feedback}</h2>
             {/* `<Input isRequired label={translations.date} name="date" type="date" />
             `<Input isRequired label={translations.time} name="time" type="time" /> */}
             <Input isRequired label={translations.name} name="name" placeholder={translations.namePlaceholder} />
@@ -207,7 +207,7 @@ export default function FeedbackForm() {
                   />
                   <div className="text-black dark:text-white items-start">
                     <h2 className="text-xl font-bold text-center w-full">Maza - مازة</h2>
-                    <p>Maza</p>
+                    <p>Maza</p>fixed feedback form head
                   </div>
                 </div>
                 <img
